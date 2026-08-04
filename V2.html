@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>คำนวณยืดหนี้ COVID</title>
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+<style>
+  body { font-family: 'Sarabun', 'Segoe UI', Tahoma, sans-serif; max-width: 800px; margin: 20px auto; padding: 20px; background: #f5f5f5; }
+  .form { background: white; padding: 25px 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+  h1 { text-align: center; color: #2c3e50; margin-bottom: 25px; font-size: 22px; }
+  h2 { color: #2c3e50; font-size: 16px; border-bottom: 2px solid #3498db; padding-bottom: 6px; margin-top: 25px; }
+  .row { display: flex; align-items: center; margin: 6px 0; padding: 4px 0; flex-wrap: wrap; }
+  .row label { width: 270px; font-size: 14px; color: #333; flex-shrink: 0; }
+  .row input.num { width: 120px; padding: 6px 10px; font-size: 14px; border: 1px solid #ccc; border-radius: 5px; text-align: right; }
+  .row input.num:focus { border-color: #3498db; outline: none; box-shadow: 0 0 4px rgba(52,152,219,0.4); }
+  .row input.sm { width: 60px; }
+  .row .unit { font-size: 13px; color: #666; padding-left: 8px; }
+  .input-section input.num { background: #eaf4fe; }
+  .result-section input.num { background: #fff9e6; font-weight: bold; color: #2c3e50; }
+  .result-highlight { background: #fff3cd; border: 2px solid #ffc107 !important; border-radius: 5px; font-weight: bold; font-size: 15px; }
+  .auto-box { display: inline-block; background: #f0f0f0; border: 1px solid #ddd; border-radius: 5px; padding: 6px 10px; font-size: 14px; text-align: right; width: 120px; color: #555; }
+  .date-group { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; }
+  .date-group label.subl { font-size: 12px; color: #888; width: auto; margin-right: 2px; }
+  .date-group input { width: 55px; padding: 6px 6px; font-size: 14px; border: 1px solid #ccc; border-radius: 5px; text-align: center; }
+  .date-group input:focus { border-color: #3498db; outline: none; box-shadow: 0 0 4px rgba(52,152,219,0.4); }
+  .date-group span { font-size: 14px; color: #333; margin: 0 2px; }
+  .btn-row { text-align: center; margin-top: 20px; }
+  .btn { padding: 10px 25px; font-size: 15px; border: none; border-radius: 6px; cursor: pointer; margin: 0 6px 8px 0; display: inline-block; }
+  .btn-calc { background: #27ae60; color: white; }
+  .btn-calc:hover { background: #219a52; }
+  .btn-clear { background: #e74c3c; color: white; }
+  .btn-clear:hover { background: #c0392b; }
+  .btn-print { background: #3498db; color: white; }
+  .btn-print:hover { background: #2980b9; }
+  .btn-excel { background: #1d6f42; color: white; }
+  .btn-excel:hover { background: #155832; }
+  .note { font-size: 12px; color: #888; margin-top: 15px; text-align: center; }
+  input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type=number] { -moz-appearance: textfield; }
+  .table-wrap { max-height: 400px; overflow-y: auto; margin-top: 10px; border: 1px solid #ddd; border-radius: 6px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table thead { position: sticky; top: 0; z-index: 1; }
+  table th { background: #2c3e50; color: white; padding: 8px 10px; text-align: center; }
+  table td { padding: 6px 10px; text-align: center; border-bottom: 1px solid #eee; }
+  table tr:nth-child(even) { background: #f9f9f9; }
+  .count-info { font-size: 13px; color: #666; margin-top: 8px; }
+  .btn-dlexcel { background: #1d6f42; color: white; border: none; border-radius: 5px; padding: 6px 18px; font-size: 13px; cursor: pointer; text-decoration: none; display: inline-block; }
+  .btn-dlexcel:hover { background: #155832; }
+  @media print { body { background: white; } .form { box-shadow: none; padding: 10px; } .btn-row { display: none; } .note { display: none; } .table-wrap { max-height: none; overflow: visible; } }
+</style>
+</head>
+<body>
+<div class="form">
+<h1>โปรแกรมคำนวณยืดหนี้ COVID</h1>
+
+<div class="input-section">
+<h2>ข้อมูลนำเข้า (แก้ไขได้)</h2>
+<div class="row"><label>ยอดจัด (เงินต้น)</label><input type="number" class="num" id="loan" value="420000" oninput="calc()"><span class="unit">บาท</span></div>
+<div class="row"><label>ดอกเบี้ยต่อเดือน</label><input type="number" class="num" id="rate" value="1.8" step="0.1" oninput="calc()"><span class="unit">%</span></div>
+<div class="row"><label>จำนวนงวดทั้งหมด</label><input type="number" class="num" id="totalPeriods" value="80" oninput="calc()"><span class="unit">งวด</span></div>
+<div class="row"><label>จำนวนเดือนทั้งหมด</label><input type="number" class="num" id="totalMonths" value="40" oninput="calc()"><span class="unit">เดือน</span></div>
+<div class="row"><label>ค่างวดปกติ (ก่อนภาษี)</label><input type="number" class="num" id="normalInstall" value="9030" oninput="calc()"><span class="unit">บาท</span></div>
+<div class="row"><label>ภาษีต่องวด</label><input type="number" class="num" id="tax" value="250" oninput="calc()"><span class="unit">บาท</span></div>
+<div class="row"><label>ค่างวดรวมภาษี (ปกติ)</label><span class="auto-box" id="totalInstall">9,280.00</span><span class="unit">บาท</span></div>
+<div class="row"><label>ค่างวดช่วงยืดหนี้ (= ครึ่งหนึ่ง)</label><span class="auto-box" id="reliefInstall">4,640.00</span><span class="unit">บาท</span></div>
+<div class="row"><label>จำนวนงวดที่ผ่อนแล้วก่อนยืดหนี้</label><input type="number" class="num" id="paidPeriods" value="38" oninput="calc()"><span class="unit">งวด</span></div>
+<div class="row"><label>วันที่เริ่มยืดหนี้ (งวดแรกที่ลด)</label>
+  <div class="date-group">
+    <label class="subl">วัน</label><input type="number" class="sm" id="startDay" value="10" min="1" max="31" oninput="calc()">
+    <span>/</span>
+    <label class="subl">เดือน</label><input type="number" class="sm" id="startMonth" value="4" min="1" max="12" oninput="calc()">
+    <span>/</span>
+    <label class="subl">ปี</label><input type="number" class="sm" id="startYear" value="2563" min="2500" max="2600" oninput="calc()">
+    <span class="unit" style="padding-left:4px;">พ.ศ.</span>
+  </div>
+</div>
+</div>
+
+<div class="result-section">
+<h2>ผลลัพธ์</h2>
+<div class="row"><label>งวดที่เหลือก่อนยืดหนี้</label><input type="text" class="num" id="remainingPeriods" readonly><span class="unit">งวด</span></div>
+<div class="row"><label>ยอดคงเหลือ</label><input type="text" class="num" id="remainingBalance" readonly><span class="unit">บาท</span></div>
+<div class="row"><label>จำนวนงวดใหม่ (จ่ายลดลง)</label><input type="text" class="num" id="newCount" readonly><span class="unit">งวด</span></div>
+<div class="row"><label>จำนวนเดือนที่ต้องผ่อนต่อ</label><input type="text" class="num" id="newMonths" readonly><span class="unit">เดือน</span></div>
+<div class="row"><label style="font-weight:bold;color:#d35400;">วันที่ครบกำหนด</label><input type="text" class="num result-highlight" id="endDate" readonly><span class="unit"></span></div>
+</div>
+
+<div class="btn-row">
+<button class="btn btn-calc" onclick="calc()">คำนวณ</button>
+<button class="btn btn-clear" onclick="clearAll()">ล้างค่า</button>
+<button class="btn btn-print" onclick="window.print()">พิมพ์ / บันทึก PDF</button>
+</div>
+
+<h2>รายการงวด</h2>
+<div class="btn-row">
+<button class="btn btn-excel" onclick="showSchedule('current')">แสดงรายผ่อนถึงปัจจุบัน (ถ้าผ่อนตรง)</button>
+<button class="btn btn-excel" onclick="showSchedule('all')">แสดงรายการทั้งหมด</button>
+</div>
+<div class="table-wrap" id="tableWrap"></div>
+<div class="count-info" id="countInfo"></div>
+<div style="text-align:right;margin-top:6px"><a href="#" onclick="exportExcel();return false" class="btn-dlexcel">⬇ ดาวน์โหลด Excel</a></div>
+
+<div class="note">* ค่างวดช่วงยืดหนี้ = ค่างวดรวมภาษี (ปกติ) หาร 2 อัตโนมัติ</div>
+</div>
+
+<script>
+function fmtNum(n, d) {
+  if (d === undefined) d = 2;
+  return Number(n).toLocaleString('th-TH', {minimumFractionDigits:d, maximumFractionDigits:d});
+}
+
+function calc() {
+  var normal = parseFloat(document.getElementById('normalInstall').value) || 0;
+  var tax = parseFloat(document.getElementById('tax').value) || 0;
+  var total = normal + tax;
+  document.getElementById('totalInstall').textContent = fmtNum(total);
+
+  var relief = total / 2;
+  document.getElementById('reliefInstall').textContent = fmtNum(relief, 4);
+
+  var totalP = parseInt(document.getElementById('totalPeriods').value) || 0;
+  var paid = parseInt(document.getElementById('paidPeriods').value) || 0;
+  var remaining = totalP - paid;
+  document.getElementById('remainingPeriods').value = remaining;
+
+  var balance = remaining * total;
+  document.getElementById('remainingBalance').value = fmtNum(balance);
+  window._initialBalance = balance;
+
+  var newCount = Math.ceil(balance / relief);
+  document.getElementById('newCount').value = newCount;
+  window._newCount = newCount;
+
+  var months = newCount / 2;
+  document.getElementById('newMonths').value = months.toLocaleString('th-TH', {minimumFractionDigits:1, maximumFractionDigits:2});
+
+  var sd = parseInt(document.getElementById('startDay').value) || 1;
+  var sm = parseInt(document.getElementById('startMonth').value) || 1;
+  var sy = parseInt(document.getElementById('startYear').value) || 2563;
+
+  var totalM = Math.round(months);
+  var endM = sm + totalM;
+  var endY = sy;
+  while (endM > 12) { endM -= 12; endY += 1; }
+
+  document.getElementById('endDate').value = sd + '/' + ('0' + endM).slice(-2) + '/' + endY;
+
+  window._endMonth = endM;
+  window._endYear = endY;
+  window._relief = relief;
+
+  showSchedule(window._scheduleMode || 'current');
+}
+
+function showSchedule(mode) {
+  window._scheduleMode = mode;
+  var sd = parseInt(document.getElementById('startDay').value) || 10;
+  var sm = parseInt(document.getElementById('startMonth').value) || 4;
+  var sy = parseInt(document.getElementById('startYear').value) || 2563;
+  var relief = window._relief || 4640;
+  var newCount = window._newCount || 84;
+
+  var now = new Date();
+  var curMon = now.getMonth() + 1;
+  var curYr = now.getFullYear() + 543;
+
+  var rows = [];
+  var cum = 0;
+  var remainBal = window._initialBalance || (newCount * relief);
+  var d = sd, m = sm, y = sy;
+  var seq = 0;
+  var maxRows = (mode === 'all') ? newCount : Infinity;
+
+  while (true) {
+    if (seq >= maxRows) break;
+    if (mode !== 'all') {
+      if (y > curYr) break;
+      if (y === curYr && m > curMon) break;
+    }
+
+    seq++;
+    cum += relief;
+    remainBal = Math.max(0, remainBal - relief);
+    rows.push({no: seq, day: d, month: m, year: y, amount: relief, cum: cum, remain: remainBal});
+
+    if (d === 10) {
+      d = 25;
+    } else {
+      d = 10;
+      m++;
+      if (m > 12) { m = 1; y++; }
+    }
+  }
+
+  var endMonth = (mode === 'all' && rows.length > 0) ? rows[rows.length-1].month : curMon;
+  var endYear = (mode === 'all' && rows.length > 0) ? rows[rows.length-1].year : curYr;
+  var label = (mode === 'all') ? ('ถึง ' + rows[rows.length-1].day + '/' + ('0'+endMonth).slice(-2) + '/' + endYear) : 'ถึงปัจจุบัน';
+  var html = '<table><thead><tr><th>งวดที่</th><th>วันที่</th><th>จำนวนเงิน</th><th>ยอดสะสม</th><th>ยอดคงเหลือ</th></tr></thead><tbody>';
+  for (var i = 0; i < rows.length; i++) {
+    var r = rows[i];
+    html += '<tr><td>' + r.no + '</td><td>' + r.day + '/' + ('0'+r.month).slice(-2) + '/' + r.year + '</td><td>' + fmtNum(r.amount) + '</td><td>' + fmtNum(r.cum) + '</td><td>' + fmtNum(r.remain) + '</td></tr>';
+  }
+  html += '</tbody></table>';
+  document.getElementById('tableWrap').innerHTML = html;
+  document.getElementById('countInfo').textContent = 'รวม ' + rows.length + ' งวด (' + label + ')  ยอดผ่อนรวม ' + fmtNum(cum) + ' บาท';
+  window._scheduleRows = rows;
+}
+
+function exportExcel() {
+  var rows = window._scheduleRows || [];
+  if (rows.length === 0) { alert('ไม่มีข้อมูล กรุณากด คำนวณ ก่อน'); return; }
+
+  var wb = new ExcelJS.Workbook();
+  wb.creator = 'คำนวณยืดหนี้';
+  var ws = wb.addWorksheet('รายการงวด');
+
+  ws.columns = [
+    { header: 'งวดที่', key: 'no', width: 12 },
+    { header: 'วันที่', key: 'date', width: 20 },
+    { header: 'จำนวนเงิน', key: 'amount', width: 18 },
+    { header: 'ยอดสะสม', key: 'cum', width: 18 },
+    { header: 'ยอดคงเหลือ', key: 'remain', width: 18 }
+  ];
+
+  var centerAlign = { horizontal: 'center', vertical: 'middle' };
+
+  var headerStyle = {
+    font: { name: 'Tahoma', size: 12, bold: true },
+    alignment: centerAlign
+  };
+  for (var c = 1; c <= 5; c++) {
+    ws.getRow(1).getCell(c).style = headerStyle;
+  }
+
+  for (var i = 0; i < rows.length; i++) {
+    var r = rows[i];
+    var row = ws.addRow({
+      no: r.no,
+      date: r.day + '/' + ('0'+r.month).slice(-2) + '/' + r.year,
+      amount: r.amount,
+      cum: r.cum,
+      remain: r.remain
+    });
+    for (var c = 1; c <= 5; c++) {
+      var cell = row.getCell(c);
+      cell.font = { name: 'Tahoma', size: 12 };
+      cell.alignment = centerAlign;
+    }
+    row.getCell(3).numFmt = '#,##0';
+    row.getCell(4).numFmt = '#,##0';
+    row.getCell(5).numFmt = '#,##0';
+  }
+
+  wb.xlsx.writeBuffer().then(function(buf) {
+    var blob = new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'ถ้าผ่อนตรง ยืดหนี้ถึงปัจจุบัน.xlsx';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+}
+
+function clearAll() {
+  document.querySelectorAll('.input-section input.num').forEach(function(el) { el.value = ''; });
+  document.getElementById('startDay').value = '';
+  document.getElementById('startMonth').value = '';
+  document.getElementById('startYear').value = '';
+  document.getElementById('endDate').value = '';
+  calc();
+}
+
+window.onload = function() { calc(); };
+</script>
+</body>
+</html>
