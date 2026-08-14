@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Hauwie 11 Pro · 60+ นาที Zone 2</title>
+    <style>
+        :root {
+            --bg: #f0f5fa;
+            --card: #ffffff;
+            --primary: #1e3c5c;
+            --accent: #2a5f7a;
+            --soft-blue: #e1ecf5;
+            --border: #d0dfeb;
+            --text: #1a2e40;
+            --muted: #4f6f8f;
+            --success: #2e7d32;
+            --warn: #b8860b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f2f6fb 0%, #e6edf5 100%);
+            font-family: 'Segoe UI', 'Roboto', system-ui, -apple-system, sans-serif;
+            padding: 1.2rem 0.8rem 2rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text);
+        }
+
+        .container {
+            max-width: 620px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 2rem;
+            padding: 1.5rem 1.1rem 2rem;
+            box-shadow: 0 18px 30px rgba(0, 15, 30, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        h1 {
+            font-size: 1.7rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #163a50, #2a5f7a);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 0.4rem;
+        }
+
+        .badge {
+            background: #d9e6f2;
+            color: #1e3c5c;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .subhead {
+            font-size: 0.95rem;
+            color: var(--muted);
+            margin-bottom: 1.2rem;
+            border-left: 4px solid var(--accent);
+            padding-left: 0.8rem;
+            font-weight: 500;
+        }
+
+        .highlight-card {
+            background: #e8f4ea;
+            border-left: 6px solid var(--success);
+            border-radius: 1.4rem;
+            padding: 1.2rem 1.2rem;
+            margin: 1rem 0 1.4rem;
+            font-weight: 600;
+            color: #1e4d2b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .plan-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.1rem;
+            margin: 1.3rem 0;
+        }
+
+        .day-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1rem 1.2rem;
+            border: 1px solid var(--border);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.03);
+        }
+
+        .day-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.6rem;
+        }
+
+        .day-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #1d4259;
+            background: #eef5fb;
+            padding: 0.2rem 1rem;
+            border-radius: 30px;
+        }
+
+        .duration {
+            background: #e5f0f9;
+            border-radius: 30px;
+            padding: 0.25rem 0.9rem;
+            font-weight: 700;
+            color: #1c4d6b;
+        }
+
+        .detail-list {
+            list-style: none;
+        }
+
+        .detail-list li {
+            padding: 0.45rem 0;
+            border-bottom: 1px dashed #dfe9f2;
+            font-size: 0.92rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .detail-list li:last-child {
+            border-bottom: none;
+        }
+
+        .icon {
+            font-size: 1.2rem;
+            min-width: 26px;
+            text-align: center;
+        }
+
+        .warning-box {
+            background: #fff8e6;
+            border-left: 6px solid var(--warn);
+            border-radius: 1.2rem;
+            padding: 0.9rem 1.1rem;
+            margin: 1.2rem 0;
+            color: #6b4e0a;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .tip-box {
+            background: #f0f7fc;
+            border-radius: 1.2rem;
+            padding: 1rem 1.2rem;
+            margin: 1.2rem 0 0.6rem;
+            border: 1px solid #cde0ee;
+            color: #14425c;
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+
+        .footer {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #5a6f80;
+        }
+
+        @media (max-width: 420px) {
+            .day-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>
+        ⏱️ ฝึก 60+ นาทีต่อครั้ง
+        <span class="badge">Hauwie 11 Pro</span>
+    </h1>
+    <div class="subhead">
+        สำหรับคุณ Hauwie brand 11 Pro · Zone 2 · หัวใจ ≤120 bpm · 3 วัน/สัปดาห์
+    </div>
+
+    <div class="highlight-card">
+        ✅ ได้เลย! คุณแข็งแรงและมีพื้นฐานดีอยู่แล้ว ฝึกครั้งละ 60 นาทีขึ้นไปได้ตั้งแต่สัปดาห์แรก
+    </div>
+
+    <!-- แผน 60+ นาที (จันทร์ พุธ ศุกร์) -->
+    <div class="plan-grid">
+        <!-- จันทร์ -->
+        <div class="day-card">
+            <div class="day-header">
+                <span class="day-name">📅 จันทร์</span>
+                <span class="duration">60–65 นาที</span>
+            </div>
+            <ul class="detail-list">
+                <li><span class="icon">👟</span> เดินวอร์ม 5 นาที (HR 95–107)</li>
+                <li><span class="icon">🏃</span> วิ่ง Zone 2: 50–55 นาที (11:45–12:45/กม.)</li>
+                <li><span class="icon">💓</span> HR คงที่ ≤120 bpm</li>
+                <li><span class="icon">🧘</span> เดินคูลดาวน์ 5–8 นาที</li>
+            </ul>
+        </div>
+
+        <!-- พุธ -->
+        <div class="day-card">
+            <div class="day-header">
+                <span class="day-name">📅 พุธ</span>
+                <span class="duration">65–70 นาที</span>
+            </div>
+            <ul class="detail-list">
+                <li><span class="icon">👟</span> เดินวอร์ม 5 นาที + ยืดเหยียด</li>
+                <li><span class="icon">🏃</span> วิ่ง Zone 2 ต่อเนื่อง: 55–60 นาที</li>
+                <li><span class="icon">📏</span> ระยะทาง ~5.5–6.5 กม.</li>
+                <li><span class="icon">🧘</span> คูลดาวน์ + massage น่อง 5 นาที</li>
+            </ul>
+        </div>
+
+        <!-- ศุกร์ -->
+        <div class="day-card">
+            <div class="day-header">
+                <span class="day-name">📅 ศุกร์</span>
+                <span class="duration">70–80 นาที</span>
+            </div>
+            <ul class="detail-list">
+                <li><span class="icon">👟</span> เดินวอร์ม 5–8 นาที</li>
+                <li><span class="icon">🏃</span> วิ่งยาว Zone 2: 60–70 นาที (12:00–13:00/กม.)</li>
+                <li><span class="icon">💧</span> จิบน้ำทุก 15–20 นาที</li>
+                <li><span class="icon">🧘</span> เดินคูลดาวน์ 8–10 นาที</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- คำเตือนเล็กน้อย -->
+    <div class="warning-box">
+        ⚠️ เนื่องจากวิ่งยาวเกิน 60 นาที ควรมี <strong>เจลหรือน้ำตาล</strong> ติดตัวบ้าง หากรู้สึกหน้ามืดหรือใจสั่นเกิน 120 ให้ <strong>เดิน 2–3 นาที</strong> จนหัวใจลง แล้วค่อยวิ่งต่อ
+    </div>
+
+    <!-- วิธีตั้งค่าบน Hauwie 11 Pro -->
+    <div class="tip-box">
+        <strong>📲 ตั้งค่า Hauwie 11 Pro สำหรับ 60+ นาที</strong><br>
+        • เปิด <strong>HR Alert สูงสุด 120 bpm</strong> (สั่นเมื่อเกิน)<br>
+        • ใช้โหมด <strong>Run → Zone 2 Target</strong> ถ้ามี<br>
+        • ตั้ง <strong>Auto Lap ทุก 1 กม.</strong> เพื่อดู pace ไม่ให้เร็วเกิน<br>
+        • เปิด <strong>Hydration Alert</strong> (ถ้ามี) เตือนดื่มน้ำทุก 15 นาที<br>
+        • หลังวิ่ง เช็คกราฟหัวใจในแอปว่าอยู่ Zone 2 กี่ %
+    </div>
+
+    <div class="footer">
+        🏷️ Hauwie brand 11 Pro · แผน 60+ นาที · จันทร์/พุธ/ศุกร์<br>
+        ฟังร่างกาย ลดความเร็วเมื่อ HR เกิน 120 เสมอ
+    </div>
+</div>
+</body>
+</html>
